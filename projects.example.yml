@@ -1,0 +1,11 @@
+-
+  server_name: myproject.dev
+  server_name_alias: myproject.dev3
+  image: tobiasb/rb-basic-lamp
+  args: -p 49100:22 -p 8080:80 -v /vagrant_data/myproject.dev:/var/www/
+  port: 8080
+-
+  server_name: myproject.dev2
+  image: tobiasb/rb-basic-lamp
+  args: -p 49101:22 -p 8081:80 -v /vagrant_data/myproject.dev2:/var/www/
+  port: 8081
