@@ -18,16 +18,15 @@ server {
 HOST
 
 VAGRANTFILE_API_VERSION = "2"
-Vagrant.require_plugin 'vagrant-hostsupdater'
-Vagrant.require_plugin 'vagrant-vbguest'
-Vagrant.require_plugin 'vagrant-cachier'
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
   # Load a projects file if it exists, see projects.example.yml.
   dirname = File.dirname(__FILE__)
   projectsfile = dirname + "/projects.yml"
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "dockerbase"
+  config.vm.box_url = "https://dl.dropboxusercontent.com/1/view/3al3t8xxp131w9h/VirtualBox/packer_virtualbox-iso_virtualbox.box"
   config.cache.auto_detect = true
   hostnames = Array.new
   if File.exist?(projectsfile)
