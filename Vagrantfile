@@ -1,5 +1,17 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+
+plugins = Array.new
+plugins.push("vagrant-hostsupdater")
+plugins.push("vagrant-vbguest")
+plugins.push("vagrant-cachier")
+
+plugins.each do |plugin|
+  unless Vagrant.has_plugin?(plugin)
+    raise plugin + ' is not installed!' + ' Run the command "vagrant plugin install ' + plugin + '" to install the plugin.'
+  end
+end
+
 require 'erb'
 require 'yaml'
 
