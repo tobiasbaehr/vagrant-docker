@@ -37,7 +37,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   projectsfile = dirname + "/projects.yml"
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "dockerbase"
-  config.vm.box_url = "https://dl.dropboxusercontent.com/1/view/3al3t8xxp131w9h/VirtualBox/packer_virtualbox-iso_virtualbox.box"
+  config.vm.box_url = "https://dl.dropboxusercontent.com/1/view/3s1xyj4mcvnsnwe/VirtualBox/packer_virtualbox-iso_virtualbox.box"
   hostnames = Array.new
   if File.exist?(projectsfile)
     config.vm.provision :shell, :inline => "/usr/bin/apt-get install -yqq nginx"
