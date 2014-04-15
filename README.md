@@ -12,6 +12,8 @@ HOW TO USE
   - ``vagrant plugin install vagrant-hostsupdater``
   - ``vagrant plugin install vagrant-vbguest``
  
+- Create a directory called ``data`` beside this directory
+
 - Copy projects.example.yml to projects.yml
 
 - Start your Virtualbox
