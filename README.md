@@ -33,4 +33,17 @@ Hints
     -- A shell provisioner creates nginx vhosts inside the vm to proxy incoming http requests to the running container for all projects which are stored in *projects.yml*. But do not removes vhosts.
 
 
+---------
+Bugs
+---------
 
+``
+Failed to mount folders in Linux guest. This is usually because
+the "vboxsf" file system is not available. Please verify that
+the guest additions are properly installed in the guest and
+can work properly. The command attempted was:
+
+mount -t vboxsf -o ...
+``
+
+See https://github.com/mitchellh/vagrant/issues/3341#issuecomment-38887958
