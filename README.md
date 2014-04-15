@@ -5,19 +5,13 @@ vagrant-docker
 HOW TO USE
 ----------
 
-- Clone this git repository into the directory *packer_build*
+- Clone this git repository into your local machine
   ``git clone https://github.com/reinblau/vagrant-docker.git``
 
-- Add a basebox to vagrant with the name *dockerbase*
- 
-Example with the created basebox from [vagrant-packer](https://github.com/reinblau/vagrant-packer)
-``vagrant box add dockerbase packer_virtualbox-iso_virtualbox.box``
-
 - Run the following commands to install all required plugins
-  ``vagrant plugin install vagrant-hostsupdater``
-  ``vagrant plugin install vagrant-vbguest``
-  ``vagrant plugin install vagrant-cachier``
-
+  - ``vagrant plugin install vagrant-hostsupdater``
+  - ``vagrant plugin install vagrant-vbguest``
+ 
 - Copy projects.example.yml to projects.yml
 
 - Start your Virtualbox
