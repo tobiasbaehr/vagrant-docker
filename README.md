@@ -36,9 +36,8 @@ Hints
 ----------
 - In case you need to change *projects.yml* run the command ``vagrant halt`` so that vagrant removes the hosts entries again
 - Run the command ``vagrant up`` and then ``vagrant provision``
-    -- A docker provisioner downloads the docker images and starts the docker container from *projects.yml*
-    -- A shell provisioner creates nginx vhosts inside the vm to proxy incoming http requests to the running container for all projects which are stored in *projects.yml*. But do not removes vhosts.
-
+    - A docker provisioner downloads the docker images and starts the docker container from *projects.yml*
+    - A shell provisioner creates nginx vhosts inside the vm to proxy incoming http requests to the running container for all projects which are stored in *projects.yml*. But do not removes vhosts.
 
 ---------
 Bugs
@@ -50,6 +49,5 @@ the guest additions are properly installed in the guest and
 can work properly. The command attempted was:
 
 mount -t vboxsf -o ...
-
 
 See https://github.com/mitchellh/vagrant/issues/3341#issuecomment-38887958
