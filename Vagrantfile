@@ -18,12 +18,9 @@ $nginx_vhost = <<HOST
 server {
   listen 80;
   server_name <%= project["server_name"] %> <%= project["server_name_alias"] %>;
-
   location / {
+    include proxy_params;
     proxy_pass http://localhost:<%= project["port"] %>;
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   }
 }
 HOST
@@ -56,7 +53,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         d.run project["server_name"],
           image: project["image"],
           cmd: project["cmd"],
-          args: "-d --hostname='" + project["server_name"] + "' " + project["args"]
+          args: " --hostname='" + project["server_name"] + "' " + project["args"]
         end
      end
    end
@@ -107,7 +104,7 @@ SCRIPT
   #
   config.vm.provider :virtualbox do |vb|
      # Don't boot with headless mode
-     vb.name = "dockerbase"
+     vb.name = "dockerhost_dev"
      vb.gui = true
      vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
      vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
