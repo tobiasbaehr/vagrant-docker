@@ -5,9 +5,9 @@ vagrant-docker
 HOW TO USE
 ----------
 
- - Install [Virtualbox](https://www.virtualbox.org/wiki/Downloads, "Virtualbox download page")
+ - Install [Virtualbox](https://www.virtualbox.org/wiki/Downloads "Virtualbox download page")
 
- - Install [Vagrant](http://www.vagrantup.com/downloads.html, "Vagrant download page")
+ - Install [Vagrant](http://www.vagrantup.com/downloads.html "Vagrant download page")
 
 - Clone this git repository into your local machine
   ``git clone https://github.com/reinblau/vagrant-docker.git``
@@ -19,7 +19,7 @@ HOW TO USE
 
 - Copy projects.example.yml to projects.yml
     - server_name: The domain/Docker container name.
-    - image: The Docker image. More image to play with. [index.docker.io](https://index.docker.io/, "index.docker.io - Docker images repositories")
+    - image: The Docker image. More image to play with. [index.docker.io](https://index.docker.io/ "index.docker.io - Docker images repositories")
     - args: Addtional arguments for the command ``docker run`. Default is `--hostname=$server_name``
     - port: The HTTP-Port for the Nginx inside the dockerhost to proxy incoming requests to the right container.
 
