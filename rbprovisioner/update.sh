@@ -6,19 +6,6 @@ __DIR__="$(cd "$(dirname "${0}")"; echo $(pwd))"
 __BASE__="$(basename "${0}")"
 __FILE__="${__DIR__}/${__BASE__}"
 
-verify_bash() {
-  if [ -z "${BASH_SOURCE}" ];then
-    echo "Do not run the script via sh. Use bash do to this." >&2
-    exit 1
-  fi
-}
-
-# Check if we have root powers
-if [ `whoami` != root ]; then
-    echo "Please run this script as root or using sudo" >&2
-    exit 1
-fi
-
 update_os() {
   apt-get update -q
   apt-get upgrade -yq
@@ -30,22 +17,36 @@ update_self() {
   echo "Self-update"
   echo "------------------------------------"
   echo
-  git > /dev/null 2>&1 || apt-get install -y git-core > /dev/null 2>&1
   if [ ! -d "${RBHOME}/.git" ];then
-    rm -rf /tmp/vagrant-docker > /dev/null 2>&1
-    git clone https://github.com/reinblau/vagrant-docker.git /tmp/vagrant-docker
-    #mv /tmp/vagrant-docker/.git "${RBHOME}/.git"
+    # set up a trap to delete the temp dir when the script exits
+    unset temp_dir
+    trap '[[ -d "$temp_dir" ]] && rm -rf "$temp_dir"' EXIT
+    # create the temp dir
+    declare -r temp_dir=$(mktemp -dt dockerfiles.XXXXXX)
+    git clone https://github.com/reinblau/vagrant-docker.git "${temp_dir}"
+    mv "${temp_dir}/.git" "${RBHOME}/.git"
     #$(cd ${RBHOME};git pull)
+    echo
+    echo "Restarting provisioning"
+    echo "------------------------------------"
+    echo
+    exec "${RBHOME}/start.sh" --run
   fi
-  echo
-  echo "Restarting provisioning"
-  echo "------------------------------------"
-  echo
-  exec "${RBHOME}/start.sh" --run
 }
 
 update_crane() {
   rm /usr/local/bin/crane 2> /dev/null || true
+}
+
+update_dockerfiles() {
+  subdirs="$DOCKERFILES/*"
+  for dir in "${subdirs}"
+    do
+      gitdir="${dir}/.git"
+      if [ -d "${gitdir}" ];then
+        $(cd "${gitdir}" && git pull)
+      fi
+  done
 }
 
 update_run () {
@@ -71,6 +72,12 @@ main () {
   update_run "self"
   update_run "os"
   update_run "crane"
+  update_run "dockerfiles"
+  echo
+  echo "Starting provisioning"
+  echo "------------------------------------"
+  echo
+  exec "${RBHOME}/start.sh" --run
 }
 
-main "$@"
+main

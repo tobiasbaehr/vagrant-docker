@@ -6,19 +6,6 @@ __DIR__="$(cd "$(dirname "${0}")"; echo $(pwd))"
 __BASE__="$(basename "${0}")"
 __FILE__="${__DIR__}/${__BASE__}"
 
-verify_bash() {
-  if [ -z "${BASH_SOURCE}" ];then
-    echo "Do not run the script via sh. Use bash do to this." >&2
-    exit 1
-  fi
-}
-
-# Check if we have root powers
-if [ `whoami` != root ]; then
-    echo "Please run this script as root or using sudo" >&2
-    exit 1
-fi
-
 docker_install () {
   # Install Docker
 
@@ -57,24 +44,38 @@ cleanup() {
   fi
 }
 
-proxy () {
-  docker run -d --name="nginx-proxy" -v "/var/run/docker.sock:/tmp/docker.sock" -p "80:80" jwilder/nginx-proxy 2> /dev/null || docker restart nginx-proxy 2> /dev/null || true
-  #crane lift --manifest="${__DIR__}/crane.yml" 2> /dev/null || true
-}
-
-require() {
+require_install() {
   cp "${__DIR__}/require.sh" /usr/local/bin/rbrequire
-
   chmod +x /usr/local/bin/rbrequire
 }
 
+proxy_start () {
+  docker run -d --name="nginx-proxy" -v "/var/run/docker.sock:/tmp/docker.sock" -p "80:80" jwilder/nginx-proxy 2> /dev/null || docker restart nginx-proxy > /dev/null 2>&1 || true
+}
+
+public_install() {
+  if [ ! -d "$DOCKERFILES/public/.git" ];then
+    echo
+    echo "Installing Reinblau dockerfiles into $DOCKERFILES/public/"
+    echo "------------------------------------"
+    echo
+    # set up a trap to delete the temp dir when the script exits
+    unset temp_dir
+    trap '[[ -d "$temp_dir" ]] && rm -rf "$temp_dir"' EXIT
+    # create the temp dir
+    declare -r temp_dir=$(mktemp -dt dockerfiles.XXXXXX)
+    git clone https://github.com/reinblau/dockerfiles.git "${temp_dir}"
+    shopt -s dotglob
+    mv ${temp_dir}/* "$DOCKERFILES/public/"
+  fi
+}
+
 main () {
-  verify_bash
   docker_install
   crane_install
-  proxy
-  require
-  rbrequire foo
+  require_install
+  proxy_start
+  public_install
 }
 
 main
