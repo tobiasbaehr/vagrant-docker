@@ -1,20 +1,27 @@
 #!/usr/bin/env bash
-#set -o errexit
-#set -x
+set -o errexit
+set -o nounset
 
-service="$1"
+require=${1:-""}
+if [ -z "${require}" ];then
+  echo "Missing require parameter" >&2
+  exit 1
+fi
 
-subdirs="$DOCKERFILES/*"
-for dir in "${subdirs}"
-  do
-    runfile="${dir}/${service}/run.sh"
-    if [ -f "${runfile}" ];then
-      exec "${runfile}"
-      if [ $? -ne 0 ];then
-        echo "Could not resolve ${service}" >&2
-        exit $?
-      fi
+subdirs="$DOCKERFILES/*/"
+
+for dir in ${subdirs}
+do
+  runfile="${dir}${require}/run.sh"
+  if [ -f "${runfile}" ];then
+    echo "Executing ${runfile}"
+    bash "${runfile}"
+    if [ $? -ne 0 ];then
+       echo "Could not start ${require}." >&2
+       exit 1
     fi
+    exit 0
+  fi
 done
-echo "Unknown service ${service}" >&2
+echo "Unknown require ${require} parameter" >&2
 exit 1

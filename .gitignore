@@ -1,3 +1,6 @@
 .DS_Store
 .vagrant
 dockerfiles/*
+.autocreated
+vhosts.txt
+projects.txt

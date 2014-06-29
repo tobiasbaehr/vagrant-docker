@@ -19,6 +19,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     s.path = "rbprovisioner/start.sh"
     s.keep_color = true
   end
+  dirname = File.dirname(__FILE__)
+  vhostsfile = dirname + "/vhosts.txt"
+  hostnames = Array.new
+  if File.exist?(vhostsfile)
+    file = File.open(vhostsfile, "r")
+    hostnames = file.read.split(" ")
+    file.close
+  end
+  unless hostnames.empty?
+    config.hostsupdater.aliases = hostnames
+  end
   config.vm.provider :virtualbox do |vb|
      # Don't boot with headless mode
      vb.name = "dockerproxy"

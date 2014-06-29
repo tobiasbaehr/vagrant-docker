@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #set -o errexit
 #set -x
+set -o nounset
 
 __DIR__="$(cd "$(dirname "${0}")"; echo $(pwd))"
 __BASE__="$(basename "${0}")"
@@ -8,10 +9,11 @@ __FILE__="${__DIR__}/${__BASE__}"
 
 docker_install () {
   # Install Docker
-
+  echo
+  echo "Checking Docker availability"
+  echo "------------------------------------"
   if [ ! -f /usr/bin/docker ];
       then
-      echo
       echo "Installing Docker from get.docker.io"
       echo "------------------------------------"
       echo
@@ -22,8 +24,9 @@ docker_install () {
       echo
       echo "Docker found at /usr/bin/docker:"
       echo "------------------------------------"
-      echo
       docker version
+      echo "------------------------------------"
+      echo
   fi
 }
 
@@ -37,7 +40,7 @@ crane_install() {
   fi
 }
 
-cleanup() {
+cleanup_images() {
   local images=$(docker images -f "dangling=true" -q)
   if [ ! -z "${images}" ];then
     docker rmi "${images}" > /dev/null
@@ -70,12 +73,63 @@ public_install() {
   fi
 }
 
+projects_start() {
+  if [ -f "$PROJECTLIST" ];then
+    for project in $(cat "$PROJECTLIST")
+    do
+      echo "Starting project ${project}"
+      echo "------------------------------------"
+      echo
+      rbrequire "${project}"
+      echo "------------------------------------"
+      echo
+      if [ $? -ne 0 ];then
+        echo "Could not start ${project}." >&2
+        exit 1
+      fi
+    done
+  fi
+}
+
+collect_vhost() {
+  declare -a vhosts=()
+  local count=0
+  for ContainerID in $(docker ps -q)
+  do
+    local IFS=','
+    local VIRTUAL_HOST=${VIRTUAL_HOST:-""}
+    local envs=$(echo "$(docker inspect --format='{{json .Config.Env}}' "${ContainerID}")" | cut -d "[" -f 2 | cut -d "]" -f 1)
+    for conf in ${envs}
+    do
+      if echo "${conf}" | grep VIRTUAL_HOST > /dev/null ;then
+        count=$(( $count + 1 ))
+        vhosts+=($(echo "${conf}" | cut -d '"' -f 2 | cut -d '=' -f 2))
+        #vhosts[${count}]=$(echo "${conf}" | cut -d '=' -f 2)
+      fi
+    done
+  done
+  vhosts=${vhosts:-""}
+  if [ ! -z "${vhosts}" ];then
+    echo "${vhosts[@]}" > ${VAGRANTDOCKER}/vhosts.txt
+  fi
+  # for i in ${count}
+  # do
+  #   if [ ! -z ${vhosts[$i]} ];then
+  #     printf "%s" ${vhosts[$i]}
+  #   fi
+  #   # > ${VAGRANTDOCKER}/vhosts.txt
+  # done
+}
+
 main () {
   docker_install
   crane_install
   require_install
   proxy_start
   public_install
+  projects_start
+  collect_vhost
+  cleanup_images
 }
 
 main
