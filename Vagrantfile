@@ -14,7 +14,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 #  config.ssh.forward_agent = true
   config.vm.box = "tobiasb/dockerhost"
   config.vm.network :private_network, ip: "192.168.56.2"
-  config.vm.hostname = "dockerproxy.dev"
+  config.vm.hostname = "dockerhost.dev"
   config.vm.provision :shell do |s|
     s.path = "rbprovisioner/start.sh"
     s.keep_color = true
@@ -32,7 +32,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
   config.vm.provider :virtualbox do |vb|
      # Don't boot with headless mode
-     vb.name = "dockerproxy"
+     vb.name = "dockerhost"
      vb.gui = true
   end
 end
