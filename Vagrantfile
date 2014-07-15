@@ -15,7 +15,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "tobiasb/dockerhost"
   config.vm.network :private_network, ip: "192.168.56.2"
   config.vm.hostname = "dockerhost.dev"
-  config.vm.provision :shell do |s|
+  config.vm.provision :shell , run: "always" do |s|
     s.path = "rbprovisioner/start.sh"
     s.keep_color = true
   end
