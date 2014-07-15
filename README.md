@@ -25,7 +25,7 @@ To detect an error the script should exit with a none-0 exit code in case of an 
 ```
 rbrequire directoryname
 ```
-before you start your container. Take a look at https://github.com/reinblau/dockerfiles/tree/master/phpmyadmin for an example.
+before you start your container. Take a look at https://github.com/reinblau/dockerfiles/tree/master/drupal_boilerplate for an example.
 You will see we use [crane](https://github.com/michaelsauter/crane) to build images or start a container. You can also do so.
 
 ----------
