@@ -7,7 +7,7 @@ PROJECT DESCRIPTION
 
 This project tries to help you to manage your docker containers with a very little footprint.
 
-We @reinblau use it for our own most projects. Every project lives in own container but reuse other containers for services like databases etc. and
+We [@reinblau](http://reinblau.de) use it for our own most projects. Every project lives in own container but reuse other containers for services like databases etc. and
 the project container should store his data outside the container.
 
 We lets build all publicly services/images on docker.io and use it as base for our non-publicly services/images.
