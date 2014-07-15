@@ -46,11 +46,6 @@ prestart() {
 
 
 main () {
-  if [[ ! -f $SSHKEY ]];then
-    echo "Could not found your ssh key." >&2
-    exit 1
-  fi
-
   local update=${1:-""}
   if [ -z "${update}" ];then
     prestart
