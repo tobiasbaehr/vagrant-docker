@@ -5,7 +5,7 @@ vagrant-docker
 PROJECT DESCRIPTION
 ----------
 
-This project helps you manage your docker containers with a small footprint.
+This project helps you manage your [docker](http://www.docker.com/whatisdocker/ "What it docker?") containers with a small footprint.
 
 We [@reinblau](http://reinblau.de) use it for most of our own projects. Every project
 lives in its own container but is reusing other containers for services like
