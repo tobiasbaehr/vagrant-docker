@@ -36,7 +36,7 @@ HOW TO USE
 
  - Install [Vagrant](http://www.vagrantup.com/downloads.html "Vagrant download page")
 
-- Clone this git repository into your local machine
+- Clone/Download this git repository into your local machine
   ``git clone https://github.com/reinblau/vagrant-docker.git``
 
 - Run the following commands to install all required plugins
