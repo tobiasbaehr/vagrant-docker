@@ -11,7 +11,21 @@ export VAGRANTDOCKER="/vagrant"
 export RBLIB="${VAGRANTDOCKER}/rbprovisioner"
 export DOCKERFILES="${VAGRANTDOCKER}/dockerfiles"
 export PROJECTLIST="${VAGRANTDOCKER}/projects.txt"
-export CRANEVERSION="v0.8.0"
+export BLACKLIST="${VAGRANTDOCKER}/blacklist.txt"
+export SSHDIR="${VAGRANTDOCKER}/.ssh/"
+export CRANEVERSION="v0.8.1"
+export DATADIR="/data"
+export SSHKEY=${SSHKEY:-""}
+
+if [[ -f $SSHDIR/id_rsa ]];then
+  export SSHKEY=$SSHDIR/id_rsa
+elif [[ -f $SSHDIR/id_rsa-cert ]];then
+  export SSHKEY=$SSHDIR/id_rsa-cert
+elif [[ -f $SSHDIR/id_dsa ]];then
+  export SSHKEY=$SSHDIR/id_dsa
+elif [[ -f $SSHDIR/id_dsa-cert ]];then
+  export SSHKEY=$SSHDIR/id_dsa-cert
+fi
 
 start_provisioner() {
   script="$RBLIB/provision.sh"
@@ -32,6 +46,11 @@ prestart() {
 
 
 main () {
+  if [[ ! -f $SSHKEY ]];then
+    echo "Could not found your ssh key." >&2
+    exit 1
+  fi
+
   local update=${1:-""}
   if [ -z "${update}" ];then
     prestart

@@ -4,3 +4,5 @@ dockerfiles/*
 .autocreated
 vhosts.txt
 projects.txt
+.ssh
+blacklist.txt

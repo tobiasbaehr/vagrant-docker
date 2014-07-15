@@ -70,7 +70,12 @@ update_dockerfiles() {
   for dir in ${subdirs}
     do
       gitdir="${dir}.git/"
-      if [ -d "${gitdir}" ];then
+      local dir_basename="$(echo "$(basename ${dir})")"
+      if [[ -f $BLACKLIST ]] && grep ${dir_basename} $BLACKLIST > /dev/null ;then
+        continue
+      fi
+
+      if [[ -d $gitdir ]];then
         echo
         echo "Updating ${dir}"
         echo "------------------------------------"
@@ -85,7 +90,11 @@ update_dockerfiles() {
 
 update_run () {
   local type=$1
-  local lastUpFile="/root/.${type}.lastupdate"
+  local lastUpDir=/root/rblastupdate/
+  if [[ ! -d $lastUpDir ]];then
+    mkdir $lastUpDir
+  fi
+  local lastUpFile="$lastUpDir${type}"
   local lastUpTime=0
   local now=$(date +"%s")
 

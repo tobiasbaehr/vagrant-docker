@@ -31,7 +31,7 @@ docker_install () {
 }
 
 crane_install() {
-  if [ ! -f /usr/local/bin/crane ];then
+  if [[ ! -f /usr/local/bin/crane ]];then
       echo
       echo "Installing crane"
       echo "------------------------------------"
@@ -42,8 +42,28 @@ crane_install() {
 
 cleanup_images() {
   local images=$(docker images -f "dangling=true" -q)
-  if [ ! -z "${images}" ];then
-    docker rmi "${images}" > /dev/null
+  if [[ ! -z $images ]];then
+    echo
+    echo "Remove not tagged images"
+    echo "------------------------------------"
+    echo
+    OUT=$(docker rmi $images)
+    echo $OUT
+    echo "------------------------------------"
+    echo
+  fi
+}
+
+cleanup_containers() {
+  local containers="$(docker ps -a | grep 'Exited' | awk '{print $1}')"
+  if [[ ! -z $containers ]];then
+    echo
+    echo "Clean up exited container"
+    echo "------------------------------------"
+    echo
+    docker rm $containers 2> /dev/null
+    echo "------------------------------------"
+    echo
   fi
 }
 
@@ -64,7 +84,9 @@ public_install() {
     echo
     # set up a trap to delete the temp dir when the script exits
     unset temp_dir
+    temp_dir=${temp_dir:-""}
     trap '[[ -d "$temp_dir" ]] && rm -rf "$temp_dir"' EXIT
+    mkdir -p "$DOCKERFILES/public/"
     # create the temp dir
     declare -r temp_dir=$(mktemp -dt dockerfiles.XXXXXX)
     git clone https://github.com/reinblau/dockerfiles.git "${temp_dir}"
@@ -74,7 +96,7 @@ public_install() {
 }
 
 projects_start() {
-  if [ -f "$PROJECTLIST" ];then
+  if [[ -f $PROJECTLIST ]];then
     for project in $(cat "$PROJECTLIST")
     do
       echo "Starting project ${project}"
@@ -129,6 +151,7 @@ main () {
   public_install
   projects_start
   collect_vhost
+  cleanup_containers
   cleanup_images
 }
 
