@@ -2,7 +2,9 @@
 .vagrant
 dockerfiles/*
 .autocreated
-vhosts.txt
-projects.txt
-.ssh
-blacklist.txt
+/vhosts.txt
+/projects.txt
+/.ssh
+/blacklist.txt
+/.vagrantuser
+/ssh_config.txt
