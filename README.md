@@ -39,7 +39,7 @@ HOW TO USE
   ``git clone https://github.com/reinblau/vagrant-docker.git``
 
 - Run the following commands to install all required plugins
-  - ``vagrant plugin install vagrant-hostsupdater vagrant-vbguest``
+  - ``vagrant plugin install vagrant-hostmanager vagrant-vbguest nugrant vagrant-triggers``
 
 - Copy [projects.txt.dist](projects.txt.dist) to projects.txt
     This text file is just a list of directory names of [dockerfiles/](dockerfiles/)*/NAME.
