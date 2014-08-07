@@ -14,6 +14,7 @@ update_os() {
   echo
   apt-get update -q
   apt-get upgrade -yq
+  apt-get dist-upgrade -yq
   apt-get autoclean -yq
   echo "------------------------------------"
   echo
@@ -88,6 +89,32 @@ update_dockerfiles() {
   done
 }
 
+update_dockerimages() {
+  local projects=""
+  if [[ -f $PROJECTLIST ]];then
+    for project in $(cat "$PROJECTLIST")
+      do
+      if [[ -f $BLACKLIST ]] && grep ${project} $BLACKLIST > /dev/null ;then
+        continue
+      fi
+      projects="$DOCKERFILES/*/$project/"
+      for project_dir in ${projects}
+        do
+          if [[ -f "$project_dir/crane.yml" ]];then
+            echo
+            echo "Updating docker image for ${project}"
+            echo "------------------------------------"
+            echo
+            OUT=$(cd $project_dir && crane provision)
+            echo $OUT
+            echo "------------------------------------"
+            echo
+          fi
+      done
+    done
+  fi
+}
+
 update_run () {
   local type=$1
   local lastUpDir=/root/rblastupdate/
@@ -118,6 +145,7 @@ main () {
   update_run "os"
   update_run "crane"
   update_run "dockerfiles"
+  update_run "dockerimages"
   echo
   echo "Starting provisioner"
   echo "------------------------------------"
