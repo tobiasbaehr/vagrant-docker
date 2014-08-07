@@ -58,10 +58,10 @@ mycustomproject
 ----------
 Automatic updates
 ----------
-- The shell provisioner updates this project, the OS, and all the [dockerfiles/](dockerfiles/) which contains a git-repository automatically every 7 days.
-  To avoid the update of the dockerfiles, create a file blacklist.txt and enter the directory names of every "namespace". Example:
+- The shell provisioner updates this project, the OS, all the [dockerfiles/](dockerfiles/) which contains a git-repository, and all projects which have a crane.yml file automatically every 7 days.
+  To avoid the update of the dockerfiles or a docker image, create a file blacklist.txt and enter the directory names of every "namespace" or project. Example:
   ```
+  public
   custom
-  custom2
-  custom3
+  myproject
   ```
