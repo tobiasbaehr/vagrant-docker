@@ -132,7 +132,7 @@ collect_vhost() {
         local ssh_port=$(docker inspect --format='{{(index (index .NetworkSettings.Ports "22/tcp") 0).HostPort}}' "${ContainerID}" 2> /dev/null)
         if [ ! -w $ssh_port ];then
           ssh_config+=("
-Host rb/$vhost
+Host docker/$vhost
 Hostname $vhost
 User dev
 Port $ssh_port
