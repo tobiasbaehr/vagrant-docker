@@ -43,6 +43,8 @@ HOW TO USE
 
 - Copy [projects.txt.dist](projects.txt.dist) to projects.txt
     This text file is just a list of directory names of [dockerfiles/](dockerfiles/)*/NAME.
+- (Obtional) Copy [.vagrantuser.dist](.vagrantuser.dist) to .vagrantuser. Change the values for your needs.
+
 ```
 phpmyadmin
 companyproject
