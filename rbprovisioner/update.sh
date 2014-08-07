@@ -135,8 +135,8 @@ update_run () {
   local next=$((${lastUpTime} + ${duration}));
 
   if [ "${next}" -le "${now}" ];then
-    update_"${type}"
     echo "${now}" > "${lastUpFile}"
+    update_"${type}"
   fi
 }
 
