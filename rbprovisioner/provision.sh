@@ -104,11 +104,12 @@ projects_start() {
       echo "Starting project ${project}"
       echo "------------------------------------"
       echo
-      rbrequire "${project}"
+      rbrequire --project="${project}"
+      local ec=$?
       echo "------------------------------------"
       echo
-      if [ $? -ne 0 ];then
-        echo "Could not start ${project}." >&2
+      if [ $ec -ne 0 ];then
+        echo "Can not start ${project}." >&2
         exit 1
       fi
     done
@@ -148,13 +149,6 @@ fi
     echo "${vhosts[@]}" > ${VAGRANTDOCKER}/vhosts.txt
     echo "${ssh_config[@]}" > ${VAGRANTDOCKER}/ssh_config.txt
   fi
-  # for i in ${count}
-  # do
-  #   if [ ! -z ${vhosts[$i]} ];then
-  #     printf "%s" ${vhosts[$i]}
-  #   fi
-  #   # > ${VAGRANTDOCKER}/vhosts.txt
-  # done
 }
 
 main () {

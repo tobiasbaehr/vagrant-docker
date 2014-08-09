@@ -81,8 +81,7 @@ update_dockerfiles() {
         echo "Updating ${dir}"
         echo "------------------------------------"
         echo
-        OUT=$(cd "${dir}" && git reset --hard > /dev/null && git pull)
-        echo $OUT
+        cd "${dir}" && git reset --hard > /dev/null && git pull
         echo "------------------------------------"
         echo
       fi
@@ -105,8 +104,7 @@ update_dockerimages() {
             echo "Updating docker image for ${project}"
             echo "------------------------------------"
             echo
-            OUT=$(cd $project_dir && crane provision)
-            echo $OUT
+            cd $project_dir && crane provision && crane stop && crane rm
             echo "------------------------------------"
             echo
           fi
@@ -131,7 +129,7 @@ update_run () {
   else
     lastUpTime=$(cat "${lastUpFile}")
   fi
-  local duration="60 * 60 * 24"
+  local duration="60 * 60 * 24 * 7"
   local next=$((${lastUpTime} + ${duration}));
 
   if [ "${next}" -le "${now}" ];then

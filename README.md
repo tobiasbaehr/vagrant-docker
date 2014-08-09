@@ -27,6 +27,9 @@ To detect an error the script should exit with a none-0 exit code in case of an 
 ``rbrequire directoryname`` before you start your container. Take a look at https://github.com/reinblau/dockerfiles/tree/master/drupal_boilerplate to see an example of it.
 As you’ll see we use [crane](https://github.com/michaelsauter/crane) to build images or start a container. You can do that as well!
 
+In case your project needs a shared ssh key (located in this directory level), add ``rbrequire --sshconfig`` to your run.sh script. Same for the gitconfig (/home/dev/.gitconfig), just add ``rbrequire --gitconfig``.
+The drupal_boilerplate contains also for this an example. Both needs to configure via crane.yml as volumn to use it. Once again take a look at drupal_boilerplate to see a example.
+
 ----------
 HOW TO USE
 ----------
@@ -61,9 +64,26 @@ mycustomproject
 Automatic updates
 ----------
 - The shell provisioner updates this project, the OS, all the [dockerfiles/](dockerfiles/) which contains a git-repository, and all projects which have a crane.yml file automatically every 7 days.
+  The container will then be stopped and removed to start the new container from the fresh docker image.
+
   To avoid the update of the dockerfiles or a docker image, create a file blacklist.txt and enter the directory names of every "namespace" or project. Example:
   ```
   public
   custom
   myproject
   ```
+
+----------
+Hosts file
+----------
+
+Our shell provisioner reads the VIRTUAL_HOST environment variable (provided for the jwilder/nginx-proxy container) from all projects and creates a file called vhosts.txt. The vagrant plugin vagrant-hostmanager get this vhosts config and updates your hosts file.
+
+----------
+SSH Config
+----------
+
+In order to connect to your container with the right ssh port. The shell provisioner reads the current used port (ssh port) for all projects
+and creates a file called ssh_config.txt which will then be used to add the connection info to your ssh config from your user account.
+
+At the end you can connected to your project via ``ssh docker/myproject.dev``.
