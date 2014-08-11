@@ -81,7 +81,10 @@ update_dockerfiles() {
         echo "Updating ${dir}"
         echo "------------------------------------"
         echo
-        cd "${dir}" && git reset --hard > /dev/null && git pull
+        cd "${dir}"
+        echo 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSHKEY $*' > ssh && chmod +x ssh
+        GIT_SSH='./ssh' git pull
+        rm ssh
         echo "------------------------------------"
         echo
       fi
