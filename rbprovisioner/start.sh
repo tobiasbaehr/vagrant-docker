@@ -15,6 +15,8 @@ export BLACKLIST="${VAGRANTDOCKER}/blacklist.txt"
 export SSHDIR="${VAGRANTDOCKER}/.ssh/"
 export CRANEVERSION="v0.8.1"
 export DATADIR="/data"
+export YADDPROJECTS="${DATADIR}/user/yaddprojects"
+export DOTDRUSH="${DATADIR}/user/.drush"
 export SSHKEY=${SSHKEY:-""}
 
 if [[ -f $SSHDIR/id_rsa ]];then
@@ -37,6 +39,12 @@ start_provisioner() {
 
 prestart() {
   git > /dev/null 2>&1 || apt-get install -y git-core > /dev/null 2>&1
+
+  if [ ! -e /var/www ];then
+    ln -s $DATADIR/www /var/www
+    chown vagrant:vagrant /var/www
+  fi
+
   script="$RBLIB/update.sh"
   if [ -f "${script}" ];then
     chmod +x "${script}"

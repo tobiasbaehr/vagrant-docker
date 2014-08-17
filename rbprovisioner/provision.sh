@@ -18,7 +18,6 @@ docker_install () {
       echo "------------------------------------"
       echo
       curl -s get.docker.io | sh 2>&1 | egrep -i -v "Ctrl|docker installed"
-      echo 'DOCKER_OPTS="-r=true ${DOCKER_OPTS}"' >> /etc/default/docker
       service docker restart
       else
       echo
@@ -118,7 +117,6 @@ projects_start() {
 
 collect_vhost() {
   declare -a vhosts=()
-  declare -a ssh_config=()
   local count=0
   for ContainerID in $(docker ps -q)
   do
@@ -130,24 +128,14 @@ collect_vhost() {
       if echo "${conf}" | grep VIRTUAL_HOST > /dev/null ;then
         count=$(( $count + 1 ))
         local vhost=$(echo "${conf}" | cut -d '"' -f 2 | cut -d '=' -f 2)
-        local ssh_port=$(docker inspect --format='{{(index (index .NetworkSettings.Ports "22/tcp") 0).HostPort}}' "${ContainerID}" 2> /dev/null)
-        if [ ! -w $ssh_port ];then
-          ssh_config+=("
-Host docker/$vhost
-Hostname $vhost
-User dev
-Port $ssh_port
-")
 fi
         vhosts+=($(echo "${conf}" | cut -d '"' -f 2 | cut -d '=' -f 2))
       fi
     done
   done
   vhosts=${vhosts:-""}
-  ssh_config=${ssh_config:-""}
   if [ ! -z "${vhosts}" ];then
     echo "${vhosts[@]}" > ${VAGRANTDOCKER}/vhosts.txt
-    echo "${ssh_config[@]}" > ${VAGRANTDOCKER}/ssh_config.txt
   fi
 }
 

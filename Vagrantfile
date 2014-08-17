@@ -1,17 +1,15 @@
 VAGRANTFILE_API_VERSION = "2"
 Vagrant.require_version ">= 1.6.3"
 
-plugins = Array.new
-plugins.push("vagrant-hostmanager")
-plugins.push("vagrant-vbguest")
-plugins.push("nugrant")
-plugins.push("vagrant-triggers")
-
-plugins.each do |plugin|
-  unless Vagrant.has_plugin?(plugin)
-    raise plugin + ' is not installed!' + ' Run the command "vagrant plugin install ' + plugin + '" to install the plugin.'
-  end
-end
+# Check required plugins
+REQUIRED_PLUGINS = %w(vagrant-hostmanager vagrant-vbguest nugrant)
+exit unless REQUIRED_PLUGINS.all? { |plugin|
+  Vagrant.has_plugin?(plugin) || (
+    puts "The #{plugin} plugin is required. Please install it with:"
+    puts "vagrant plugin install #{plugin}"
+    false
+  )
+}
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.user.defaults = {
@@ -36,61 +34,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.hostmanager.enabled = false
   config.hostmanager.manage_host = true
 
-  [:up, :provision].each do | command |
-    config.trigger.after command, :stdout => true do
-      setSSHConfig(config)
-    end
+  dirname = File.dirname(__FILE__)
+  vhostsfile = dirname + "/vhosts.txt"
+  hostnames = Array.new
+  if File.exist?(vhostsfile)
+    file = File.open(vhostsfile, "r")
+    hostnames = file.read.split(" ")
+    file.close
   end
 
-  def setHostNames(config)
-    dirname = File.dirname(__FILE__)
-    vhostsfile = dirname + "/vhosts.txt"
-    hostnames = Array.new
-    if File.exist?(vhostsfile)
-      file = File.open(vhostsfile, "r")
-      hostnames = file.read.split(" ")
-      file.close
-    end
-
-    unless hostnames.empty?
-      config.hostmanager.aliases = hostnames
-      config.vm.provision :hostmanager, run: "always"
-    end
-  end
-
-  setHostNames(config)
-
-  def setSSHConfig(config)
-    vm_name = config.user.vm.name
-    dirname = File.dirname(__FILE__)
-    dockerSSHConfigFile = dirname + "/ssh_config.txt"
-    userSSHConfigFile = ENV["HOME"] + "/.ssh/config"
-    if File.exist?(dockerSSHConfigFile)
-
-        file = File.open(dockerSSHConfigFile, "r")
-        dockerSSHConfig = file.read
-        file.close
-        userSSHConfig=""
-        if File.exist?(userSSHConfigFile)
-          file = File.open(userSSHConfigFile, "r")
-          userSSHConfig = file.read
-          file.close
-        else
-          file = File.open(userSSHConfigFile, "w")
-          file.write("")
-          file.close()
-        end
-        sshConfigEntry = "#START Docker vbox #{vm_name}\n#{dockerSSHConfig}#END Docker vbox #{vm_name}"
-        regex = "#START Docker vbox #{vm_name}(.*)#END Docker vbox #{vm_name}"
-        if !userSSHConfig.match(/#{regex}/m)
-          file = File.open(userSSHConfigFile, "a")
-          file.write("\n\n" + sshConfigEntry)
-        else
-          file = File.open(userSSHConfigFile, "w")
-          file.write(userSSHConfig.sub(/#{regex}/m, sshConfigEntry))
-        end
-        puts "Added SSH config to #{userSSHConfigFile}"
-        file.close()
-    end
+  unless hostnames.empty?
+    config.hostmanager.aliases = hostnames
+    config.vm.provision :hostmanager, run: "always"
   end
 end
