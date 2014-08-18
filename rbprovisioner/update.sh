@@ -30,7 +30,7 @@ run_update_scripts() {
   if [ -f $lastUpFile ];then
     lastUpNr=$(cat $lastUpFile)
   fi
-  lastUpNr=$($lastUpNr + 1)
+  lastUpNr=$(($lastUpNr + 1))
 
   if [ -f "${RBLIB}/updates/update_$lastUpNr.sh" ];then
     bash "${RBLIB}/updates/update_$lastUpNr.sh"
