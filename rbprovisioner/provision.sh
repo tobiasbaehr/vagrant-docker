@@ -96,6 +96,11 @@ public_install() {
   fi
 }
 
+commander_install() {
+  cp "${__DIR__}/commander.sh" /usr/local/bin/rbcommander
+  chmod +x /usr/local/bin/rbcommander
+}
+
 projects_start() {
   if [[ -f $PROJECTLIST ]];then
     for project in $(cat "$PROJECTLIST")
@@ -144,6 +149,7 @@ main () {
   require_install
   proxy_start
   public_install
+  commander_install
   projects_start
   collect_vhost
   cleanup_containers
