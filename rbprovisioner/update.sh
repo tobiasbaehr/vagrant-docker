@@ -20,6 +20,25 @@ update_os() {
   echo
 }
 
+run_update_scripts() {
+  local lastUpDir=/root/rblastupdate/
+  if [[ ! -d $lastUpDir ]];then
+    mkdir $lastUpDir
+  fi
+  local lastUpFile="$lastUpDir/update_scripts"
+  local lastUpNr=0
+  if [ -f $lastUpFile ];then
+    lastUpNr=$(cat $lastUpFile)
+  fi
+  lastUpNr=$($lastUpNr + 1)
+
+  if [ -f "${RBLIB}/updates/update_$lastUpNr.sh" ];then
+    bash "${RBLIB}/updates/update_$lastUpNr.sh"
+    echo $lastUpNr > $lastUpFile
+  fi
+
+}
+
 update_self() {
   if [ ! -d "${VAGRANTDOCKER}/.git" ];then
     echo
@@ -38,8 +57,8 @@ update_self() {
     echo
     echo "Self-update of vagrant-docker"
     echo "------------------------------------"
-    OUT=$(cd ${VAGRANTDOCKER} && git reset --hard > /dev/null && git pull)
-    echo $OUT
+    cd ${VAGRANTDOCKER} && git pull
+    run_update_scripts
     echo
     echo "Restarting provisioner"
     echo "------------------------------------"

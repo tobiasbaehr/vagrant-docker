@@ -7,4 +7,3 @@ dockerfiles/*
 /.ssh
 /blacklist.txt
 /.vagrantuser
-/ssh_config.txt

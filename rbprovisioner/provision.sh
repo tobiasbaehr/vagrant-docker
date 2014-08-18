@@ -78,21 +78,21 @@ proxy_start () {
 }
 
 public_install() {
-  if [ ! -d "$DOCKERFILES/public/.git" ];then
+  if [ ! -d "$DOCKERFILES/reinblau/.git" ];then
     echo
-    echo "Installing Reinblau dockerfiles into $DOCKERFILES/public/"
+    echo "Installing Reinblau dockerfiles into $DOCKERFILES/reinblau/"
     echo "------------------------------------"
     echo
     # set up a trap to delete the temp dir when the script exits
     unset temp_dir
     temp_dir=${temp_dir:-""}
     trap '[[ -d "$temp_dir" ]] && rm -rf "$temp_dir"' EXIT
-    mkdir -p "$DOCKERFILES/public/"
+    mkdir -p "$DOCKERFILES/reinblau/"
     # create the temp dir
     declare -r temp_dir=$(mktemp -dt dockerfiles.XXXXXX)
     git clone https://github.com/reinblau/dockerfiles.git "${temp_dir}"
     shopt -s dotglob
-    mv ${temp_dir}/* "$DOCKERFILES/public/"
+    mv ${temp_dir}/* "$DOCKERFILES/reinblau/"
   fi
 }
 

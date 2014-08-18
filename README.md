@@ -13,12 +13,21 @@ a mysql database or mongo db etc. And a very important note a container should s
 
 We build all public services/images on [docker.io](https://hub.docker.com/u/tobiasb/) and use it as a basis for our non-public services/images.
 
-In this project you find a directory called [dockerfiles/](dockerfiles/) which contains 3 directories [dockerfiles/company/](dockerfiles/company/), [dockerfiles/custom/](dockerfiles/custom/) and [dockerfiles/public/](dockerfiles/public/).
+In this project you find a directory called [dockerfiles/](dockerfiles/). This is the place where you store your dockerfiles in the following structure:
 
-These directories hold the projects/services for your company and your custom projects/services.
-After vagrant runs for the first time the public directory will be filled with services from https://github.com/reinblau/dockerfiles.
+```
+dockerfiles/
+dockerfiles/private/
+dockerfiles/private/myservice
+dockerfiles/private/myproject1
+dockerfiles/private/myproject2
+dockerfiles/company/
+dockerfiles/company/companyservice
+dockerfiles/company/companyproject1
+dockerfiles/company/companyproject2
+```
 
-You can create more "namespaces" to manage your own project/services.
+After vagrant runs for the first time a directory will be filled with services from https://github.com/reinblau/dockerfiles.
 
 Every project/service needs at least one shell-script called run.sh. This file is used to start your project (container) while vagrant starts the shell provisioner.
 This means when you run the command ``vagrant up`` or ``vagrant reload`` or simple ``vagrant provision``.
