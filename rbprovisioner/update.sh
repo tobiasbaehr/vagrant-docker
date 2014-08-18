@@ -63,7 +63,7 @@ update_self() {
     echo "Restarting provisioner"
     echo "------------------------------------"
     echo
-    exec "${RBLIB}/start.sh" --restart
+    exec "${RBLIB}/start.sh"
   fi
 }
 
