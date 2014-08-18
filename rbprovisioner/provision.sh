@@ -128,7 +128,6 @@ collect_vhost() {
       if echo "${conf}" | grep VIRTUAL_HOST > /dev/null ;then
         count=$(( $count + 1 ))
         local vhost=$(echo "${conf}" | cut -d '"' -f 2 | cut -d '=' -f 2)
-fi
         vhosts+=($(echo "${conf}" | cut -d '"' -f 2 | cut -d '=' -f 2))
       fi
     done
