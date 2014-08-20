@@ -1,3 +1,4 @@
 vm:
   name: "mycustomvmname"
   ip: "192.168.56.123"
+  memory: 1024

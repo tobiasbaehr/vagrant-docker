@@ -15,7 +15,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.user.defaults = {
     "vm" => {
       "name" => "dockerhost",
-      "ip" => "192.168.56.2"
+      "ip" => "192.168.56.2",
+      "memory" => 1024
     }
   }
   vm_name = config.user.vm.name
@@ -30,6 +31,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Don't boot with headless mode
     vb.name = vm_name
     vb.gui = true
+    vb.memory = config.user.vm.memory
   end
   config.hostmanager.enabled = false
   config.hostmanager.manage_host = true
