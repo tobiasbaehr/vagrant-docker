@@ -44,6 +44,15 @@ prestart() {
     ln -s $DATADIR/www /var/www
     chown vagrant:vagrant /var/www
   fi
+  if [ ! -d $YADDPROJECTS ];then
+    mkdir -p $YADDPROJECTS
+    chown vagrant:vagrant $YADDPROJECTS
+  fi
+
+  if [ ! -d $DOTDRUSH ];then
+    mkdir -p $DOTDRUSH
+    chown vagrant:vagrant $DOTDRUSH
+  fi
 
   script="$RBLIB/update.sh"
   if [ -f "${script}" ];then
