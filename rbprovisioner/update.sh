@@ -72,7 +72,7 @@ update_crane() {
   echo "Checking version of crane"
   echo "------------------------------------"
   local current_version=$(crane version)
-  if [ "${current_version}" != "${CRANEVERSION}" ];then
+  if [ "${current_version}" != "v${CRANEVERSION}" ];then
     echo "Remove current version (${current_version}) of crane"
     echo "------------------------------------"
     echo

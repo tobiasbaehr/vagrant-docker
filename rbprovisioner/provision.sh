@@ -35,6 +35,7 @@ crane_install() {
       echo "Installing crane"
       echo "------------------------------------"
       echo
+      export VERSION=$CRANEVERSION
       bash -c "`curl -sL https://raw.githubusercontent.com/michaelsauter/crane/master/download.sh`" && sudo mv crane /usr/local/bin/crane
   fi
 }
