@@ -40,6 +40,9 @@ start_provisioner() {
 prestart() {
   git > /dev/null 2>&1 || apt-get install -y git-core > /dev/null 2>&1
 
+  if [ ! -d "$DATADIR/www" ];then
+    mkdir -p $DATADIR/www
+  fi
   if [ ! -e /var/www ];then
     ln -s $DATADIR/www /var/www
     chown vagrant:vagrant /var/www
