@@ -123,7 +123,6 @@ projects_start() {
 
 collect_vhost() {
   declare -a vhosts=()
-  local count=0
   for ContainerID in $(docker ps -q)
   do
     local IFS=','
@@ -132,8 +131,6 @@ collect_vhost() {
     for conf in ${envs}
     do
       if echo "${conf}" | grep VIRTUAL_HOST > /dev/null ;then
-        count=$(( $count + 1 ))
-        local vhost=$(echo "${conf}" | cut -d '"' -f 2 | cut -d '=' -f 2)
         vhosts+=($(echo "${conf}" | cut -d '"' -f 2 | cut -d '=' -f 2))
       fi
     done
