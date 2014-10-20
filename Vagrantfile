@@ -1,5 +1,5 @@
 VAGRANTFILE_API_VERSION = "2"
-Vagrant.require_version ">= 1.6.3"
+Vagrant.require_version ">= 1.6.5"
 
 # Check required plugins
 REQUIRED_PLUGINS = %w(vagrant-hostmanager vagrant-vbguest nugrant)
@@ -16,7 +16,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     "vm" => {
       "name" => "dockerhost",
       "ip" => "192.168.56.2",
-      "memory" => 1024
+      "memory" => 1024,
+      "autoupdate" => false
     }
   }
   vm_name = config.user.vm.name
@@ -26,6 +27,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision :shell , run: "always" do |s|
     s.path = "rbprovisioner/start.sh"
     s.keep_color = true
+    if config.user.vm.autoupdate
+      s.args = '--update'
+    end
   end
   config.vm.provider :virtualbox do |vb|
     # Don't boot with headless mode

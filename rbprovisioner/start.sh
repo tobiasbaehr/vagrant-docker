@@ -57,6 +57,9 @@ prestart() {
     chown vagrant:vagrant $DOTDRUSH
   fi
 
+}
+
+run_updates() {
   script="$RBLIB/update.sh"
   if [ -f "${script}" ];then
     chmod +x "${script}"
@@ -67,9 +70,10 @@ prestart() {
 
 main () {
   local update=${1:-""}
-  if [ -z "${update}" ];then
-    prestart
+  if [ ! -z "${update}" ] && [ "${update}" == '--update' ];then
+    run_updates
   else
+    prestart
     start_provisioner
   fi
 }

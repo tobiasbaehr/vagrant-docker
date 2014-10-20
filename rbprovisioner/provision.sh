@@ -102,6 +102,11 @@ commander_install() {
   chmod +x /usr/local/bin/rbcommander
 }
 
+updater_install() {
+  cp "${__DIR__}/rbupdate.sh" /usr/local/bin/rbupdate
+  chmod +x /usr/local/bin/rbupdate
+}
+
 projects_start() {
   if [[ -f $PROJECTLIST ]];then
     for project in $(cat "$PROJECTLIST")
@@ -145,6 +150,7 @@ main () {
   docker_install
   crane_install
   require_install
+  updater_install
   proxy_start
   public_install
   commander_install

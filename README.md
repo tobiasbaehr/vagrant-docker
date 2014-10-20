@@ -67,10 +67,16 @@ mycustomproject
 - After vagrant is ready and you have a projects.txt file with at least phpmyadmin. Open your browser and enter *phpmyadmin.dev*
 
 ----------
-Automatic updates
+Updates
 ----------
+
 - The shell provisioner updates this project, the OS, all the [dockerfiles/](dockerfiles/) which contains a git-repository, and all projects which have a crane.yml file automatically every 7 days.
   The container will then be stopped and removed to start the new container from the fresh docker image.
+
+- By default the shell provisioner will not update the system etc automatically, todo this
+  change the value of autoupdate to true in your *.vagrantuser*
+
+- To update the system manually: Log in to the VM via ``vagrant ssh`` and run the command ``rbupdate``
 
   To avoid the update of the dockerfiles or a docker image, create a file blacklist.txt and enter the directory names of every "namespace" or project. Example:
   ```
@@ -83,4 +89,4 @@ Automatic updates
 Hosts file
 ----------
 
-Our shell provisioner reads the VIRTUAL_HOST environment variable (provided for the jwilder/nginx-proxy container) from all projects and creates a file called vhosts.txt. The vagrant plugin vagrant-hostmanager get this vhosts config and updates your hosts file.
+Our shell provisioner reads the VIRTUAL_HOST environment variable (provided for the jwilder/nginx-proxy container) from all projects and creates a file called vhosts.txt. The vagrant plugin vagrant-hostmanager use this text file and updates your hosts file.
