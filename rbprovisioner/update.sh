@@ -162,7 +162,7 @@ update_run () {
 }
 
 main () {
-  update_run "self" "$@"
+  update_run "self"
   update_run "os" "$@"
   update_run "crane" "$@"
   update_run "dockerfiles" "$@"
