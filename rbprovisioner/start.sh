@@ -63,15 +63,16 @@ run_updates() {
   script="$RBLIB/update.sh"
   if [ -f "${script}" ];then
     chmod +x "${script}"
-    exec "${script}"
+    exec "${script}" "$@"
   fi
 }
 
 
 main () {
   local update=${1:-""}
+  local force=${2:-""}
   if [ ! -z "${update}" ] && [ "${update}" == '--update' ];then
-    run_updates
+    run_updates "$force"
   else
     prestart
     start_provisioner

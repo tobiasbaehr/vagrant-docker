@@ -137,6 +137,7 @@ update_dockerimages() {
 
 update_run () {
   local type=$1
+  local force=${2:-""}
   local lastUpDir=/root/rblastupdate/
   if [[ ! -d $lastUpDir ]];then
     mkdir $lastUpDir
@@ -154,18 +155,18 @@ update_run () {
   local duration="60 * 60 * 24 * 7"
   local next=$((${lastUpTime} + ${duration}));
 
-  if [ "${next}" -le "${now}" ];then
+  if [ "${next}" -le "${now}" ] || [ ! -z $force ];then
     echo "${now}" > "${lastUpFile}"
     update_"${type}"
   fi
 }
 
 main () {
-  update_run "self"
-  update_run "os"
-  update_run "crane"
-  update_run "dockerfiles"
-  update_run "dockerimages"
+  update_run "self" "$@"
+  update_run "os" "$@"
+  update_run "crane" "$@"
+  update_run "dockerfiles" "$@"
+  update_run "dockerimages" "$@"
   echo
   echo "Starting provisioner"
   echo "------------------------------------"
@@ -173,4 +174,4 @@ main () {
   exec "${RBLIB}/start.sh" --run
 }
 
-main
+main "$@"
