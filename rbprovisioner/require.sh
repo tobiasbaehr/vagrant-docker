@@ -46,6 +46,7 @@ require_git_config() {
   if [ ! -f $DATADIR/user/.gitconfig ];then
     echo "Copy required .gitconfig file."
     cp $RBLIB/git/.gitconfig $DATADIR/user/.gitconfig
+    chown vagrant: $DATADIR/user/.gitconfig
   fi
 }
 
