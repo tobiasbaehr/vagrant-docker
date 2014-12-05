@@ -9,7 +9,7 @@ This project helps you manage your [docker](http://www.docker.com/whatisdocker/ 
 
 We [@reinblau](http://reinblau.de) use it for most of our own projects. Every project
 lives in its own container but is reusing other containers for services like
-a mysql database or mongo db etc. And a very important note a container should stores his data outside the container.
+a mysql database or mongo db etc. And a very important note a container should store its data outside the container.
 
 We build all public services/images on [docker.io](https://hub.docker.com/u/tobiasb/) and use it as a basis for our non-public services/images.
 
@@ -44,41 +44,45 @@ HOW TO USE
 
  - Install [Vagrant](http://www.vagrantup.com/downloads.html "Vagrant download page")
 
-- Clone/download the git repository into your local machine
-  ``git clone https://github.com/reinblau/vagrant-docker.git``
-
-- Run the following commands to install all required plugins
+ - Open your command line and run the following commands to install all required plugins (Terminal on Mac OS X/ CMD.exe on Windows)
   - ``vagrant plugin install vagrant-hostmanager vagrant-vbguest nugrant``
+
+- Download the git repository into your local machine and rename the unzipped file to *vagrant-docker*
 
 - Copy [projects.txt.dist](projects.txt.dist) to projects.txt
     This text file is just a list of directory names of [dockerfiles/](dockerfiles/)*/NAME.
-- (Obtional) Copy [.vagrantuser.dist](.vagrantuser.dist) to .vagrantuser. Change the values for your needs.
 
-```
-phpmyadmin
-companyproject
-mycustomproject
-```
+    Example:
 
-- Open your command line and navigate to the *vagrant-docker* directory
+    ```
+    phpmyadmin
+    companyproject
+    mycustomproject
+    ```
+
+- (Optional) Copy [.vagrantuser.dist](.vagrantuser.dist) to .vagrantuser. Change the values for your needs. (Ex. the vm-name, IP)
+
+- Open your command line and navigate to the *vagrant-docker* directory.
 
 - Run the command ``vagrant up`` and drink a coffee or something.
 
-- After vagrant is ready and you have a projects.txt file with at least phpmyadmin. Open your browser and enter *phpmyadmin.dev*
+- Run the command ``vagrant provision``to update your local host file.
+
+- After vagrant is ready and you have a projects.txt file with at least phpmyadmin. Open your browser and enter *phpmyadmin.dev*.
 
 ----------
 Updates
 ----------
 
-- The shell provisioner updates this project, the OS, all the [dockerfiles/](dockerfiles/) which contains a git-repository, and all projects which have a crane.yml file automatically every 7 days.
+The shell provisioner provides a update mechanism to update this project, the OS, all the [dockerfiles/](dockerfiles/) which contains a git-repository, and all projects which have a crane.yml file.
   The container will then be stopped and removed to start the new container from the fresh docker image.
 
-- By default the shell provisioner will not update the system etc automatically, todo this
+  - By default the shell provisioner will not update the system etc automatically, todo this
   change the value of autoupdate to true in your *.vagrantuser*
 
-- To update the system manually: Log in to the VM via ``vagrant ssh`` and run the command ``rbupdate``
+  - To update the system manually: Log in to the VM via ``vagrant ssh`` and run the command ``rbupdate``
 
-  To avoid the update of the dockerfiles or a docker image, create a file blacklist.txt and enter the directory names of every "namespace" or project. Example:
+To avoid the update of the dockerfiles or a docker image, create a file blacklist.txt and enter the directory names of every "namespace" or project. Example:
   ```
   public
   custom
