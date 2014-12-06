@@ -32,19 +32,19 @@ start_project() {
 }
 
 require_ssh_config() {
-  mkdir -p ${SSHDIR}
   echo "Checking required ssh-key."
   if [[ -z ${SSHKEY} ]];then
+    mkdir -p ${SSHDIR}
     echo "Can not find your ssh-key in this directory ${SSHDIR}. The project requires your ssh-key." >&2
     exit 1
   fi
 }
 
 require_git_config() {
-  mkdir -p "$DATADIR/user"
   echo "Checking required .gitconfig file."
   if [ ! -f $DATADIR/user/.gitconfig ];then
     echo "Copy required .gitconfig file."
+    mkdir -p "$DATADIR/user"
     cp $RBLIB/git/.gitconfig $DATADIR/user/.gitconfig
     chown vagrant: $DATADIR/user/.gitconfig
   fi

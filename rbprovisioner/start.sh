@@ -12,11 +12,11 @@ export RBLIB="${VAGRANTDOCKER}/rbprovisioner"
 export DOCKERFILES="${VAGRANTDOCKER}/dockerfiles"
 export PROJECTLIST="${VAGRANTDOCKER}/projects.txt"
 export BLACKLIST="${VAGRANTDOCKER}/blacklist.txt"
-export SSHDIR="${VAGRANTDOCKER}/.ssh/"
 export CRANEVERSION="0.8.1"
 export DATADIR="/data"
 export YADDPROJECTS="${DATADIR}/user/yaddprojects"
 export DOTDRUSH="${DATADIR}/user/.drush"
+export SSHDIR="${DATADIR}/user/.ssh/"
 export SSHKEY=${SSHKEY:-""}
 
 if [[ -f $SSHDIR/id_rsa ]];then

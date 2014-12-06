@@ -33,6 +33,7 @@ run_update_scripts() {
   lastUpNr=$(($lastUpNr + 1))
 
   if [ -f "${RBLIB}/updates/update_$lastUpNr.sh" ];then
+    echo "Running ${RBLIB}/updates/update_$lastUpNr.sh"
     bash "${RBLIB}/updates/update_$lastUpNr.sh"
     echo $lastUpNr > $lastUpFile
   fi
@@ -60,10 +61,10 @@ update_self() {
     cd ${VAGRANTDOCKER} && git pull
     run_update_scripts
     echo
-    echo "Restarting provisioner"
+    echo "Start update"
     echo "------------------------------------"
     echo
-    exec "${RBLIB}/start.sh"
+    exec "${RBLIB}/start.sh" --update
   fi
 }
 
