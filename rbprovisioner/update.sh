@@ -78,6 +78,8 @@ update_crane() {
     echo "------------------------------------"
     echo
     rm /usr/local/bin/crane 2> /dev/null || true
+    source $RBLIB/provision.sh
+    crane_install
   else
     echo "Found ${current_version} of crane"
     echo "------------------------------------"
