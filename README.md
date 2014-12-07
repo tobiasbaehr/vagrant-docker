@@ -5,13 +5,13 @@ vagrant-docker
 PROJECT DESCRIPTION
 ----------
 
-This project helps you manage your [docker](http://www.docker.com/whatisdocker/ "What it docker?") containers with a small footprint.
+This project helps you manage your [docker](https://www.docker.com/whatisdocker/ "What it docker?") containers with a small footprint.
 
 We [@reinblau](http://reinblau.de) use it for most of our own projects. Every project
 lives in its own container but is reusing other containers for services like
 a mysql database or mongo db etc. And a very important note a container should store its data outside the container.
 
-We build all public services/images on [docker.io](https://hub.docker.com/u/tobiasb/) and use it as a basis for our non-public services/images.
+We build all public services/images on [hub.docker.com](https://registry.hub.docker.com/repos/reinblau/) and use it as a basis for our non-public services/images.
 
 In this project you find a directory called [dockerfiles/](dockerfiles/). This is the place where you store your dockerfiles in the following structure:
 
@@ -33,7 +33,7 @@ Every project/service needs at least one shell-script called run.sh. This file i
 This means when you run the command ``vagrant up`` or ``vagrant reload`` or simple ``vagrant provision``.
 
 To detect an error the script should exit with a none-0 exit code in case of an error. To reuse another service from [dockerfiles/](dockerfiles/) you can call
-``rbrequire directoryname`` before you start your container. Take a look at https://github.com/reinblau/dockerfiles/tree/master/drupal_boilerplate to see an example of it.
+``rbrequire --project=directoryname`` before you start your container. Take a look at https://github.com/reinblau/dockerfiles/tree/master/drupal_boilerplate to see an example of it.
 As you’ll see we use [crane](https://github.com/michaelsauter/crane) to build images or start a container. You can do that as well!
 
 ----------
