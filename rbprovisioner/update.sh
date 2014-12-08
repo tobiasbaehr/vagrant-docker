@@ -64,7 +64,7 @@ update_self() {
     echo "Start update"
     echo "------------------------------------"
     echo
-    exec "${RBLIB}/start.sh" --update
+    main --noself
   fi
 }
 
@@ -165,7 +165,10 @@ update_run () {
 }
 
 main () {
-  update_run "self" "$@"
+  local context=$1
+  if [ $context != "--noself" ];then
+    update_run "self" "$@"
+  fi
   update_run "os" "$@"
   update_run "crane" "$@"
   update_run "dockerfiles" "$@"
