@@ -3,3 +3,5 @@ vm:
   ip: "192.168.56.2"
   memory: 1024
   autoupdate: false
+ssh:
+  privatekeypath: ".ssh/vagrant_access"
