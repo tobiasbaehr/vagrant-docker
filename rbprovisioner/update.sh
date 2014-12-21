@@ -104,9 +104,7 @@ update_dockerfiles() {
         echo "------------------------------------"
         echo
         cd "${dir}"
-        echo 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSHKEY $*' > ssh && chmod +x ssh
-        GIT_SSH='./ssh' git pull
-        rm ssh
+        su vagrant -c "git pull"
         echo "------------------------------------"
         echo
       fi
@@ -115,6 +113,8 @@ update_dockerfiles() {
 
 update_dockerimages() {
   local projects=""
+  echo "Stopping all containers"
+  docker rm -f $(docker ps -aq) 2> /dev/null
   if [[ -f $PROJECTLIST ]];then
     for project in $(cat "$PROJECTLIST")
       do
@@ -129,7 +129,7 @@ update_dockerimages() {
             echo "Updating docker image for ${project}"
             echo "------------------------------------"
             echo
-            cd $project_dir && crane provision && crane stop && crane rm
+            cd $project_dir && crane provision
             echo "------------------------------------"
             echo
           fi

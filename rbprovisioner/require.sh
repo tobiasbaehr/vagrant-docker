@@ -31,25 +31,6 @@ start_project() {
   exit 1
 }
 
-require_ssh_config() {
-  echo "Checking required ssh-key."
-  if [[ -z ${SSHKEY} ]];then
-    mkdir -p ${SSHDIR}
-    echo "Can not find your ssh-key in this directory ${SSHDIR}. The project requires your ssh-key." >&2
-    exit 1
-  fi
-}
-
-require_git_config() {
-  echo "Checking required .gitconfig file."
-  if [ ! -f $DATADIR/user/.gitconfig ];then
-    echo "Copy required .gitconfig file."
-    mkdir -p "$DATADIR/user"
-    cp $RBLIB/git/.gitconfig $DATADIR/user/.gitconfig
-    chown vagrant: $DATADIR/user/.gitconfig
-  fi
-}
-
 main() {
   if [[ $# == 0 ]];then
     echo "$__FILE__ requires at least one option" >&2
@@ -62,14 +43,6 @@ main() {
       --project=*)
       project="${i#*=}"
       start_project $project
-      shift
-      ;;
-      --gitconfig)
-      require_git_config
-      shift
-      ;;
-      --sshconfig)
-      require_ssh_config
       shift
       ;;
       *)
