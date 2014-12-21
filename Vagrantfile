@@ -18,9 +18,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       "ip" => "192.168.56.2",
       "memory" => 1024,
       "autoupdate" => false
+    },
+    "ssh" => {
+      "privatekeypath" => ""
     }
   }
   vm_name = config.user.vm.name
+  unless config.user.ssh.privatekeypath.empty?
+    config.ssh.private_key_path = config.user.ssh.privatekeypath
+  end
+  config.ssh.forward_agent = true
   config.vm.box = "tobiasb/dockerhost"
   config.vm.network :private_network, :ip => config.user.vm.ip
   config.vm.hostname = vm_name + ".dev"
