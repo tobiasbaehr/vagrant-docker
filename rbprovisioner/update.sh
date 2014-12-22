@@ -21,7 +21,7 @@ update_os() {
 }
 
 run_update_scripts() {
-  local lastUpDir=/root/rblastupdate/
+  local lastUpDir=/root/rblastupdate
   if [ ! -d $lastUpDir ];then
     mkdir $lastUpDir
   fi
@@ -65,7 +65,6 @@ update_self() {
     echo
     echo "Start update"
     echo "------------------------------------"
-    echo
     main --noself
   fi
 }
@@ -117,6 +116,24 @@ update_dockerimages() {
   local projects=""
   echo "Stopping all containers"
   docker rm -f $(docker ps -aq) 2> /dev/null
+
+  echo "Update built-in images"
+  docker pull jwilder/nginx-proxy
+  docker pull reinblau/cmd
+  echo "------------------------------------"
+  echo
+  subdirs="$DOCKERFILES/*/"
+  for dir in ${subdirs}
+  do
+    updatefile="${dir}update.sh"
+    if [ -f "${updatefile}" ];then
+      echo "Executing ${updatefile}"
+      bash "${updatefile}"
+      echo "------------------------------------"
+      echo
+    fi
+  done
+
   if [[ -f $PROJECTLIST ]];then
     for project in $(cat "$PROJECTLIST")
       do
@@ -132,6 +149,15 @@ update_dockerimages() {
             echo "------------------------------------"
             echo
             cd $project_dir && crane provision
+            echo "------------------------------------"
+            echo
+          fi
+          if [[ -f "$project_dir/update.sh" ]];then
+            echo
+            echo "Executing extra update for ${project}"
+            echo "------------------------------------"
+            echo
+            bash "$project_dir/update.sh"
             echo "------------------------------------"
             echo
           fi
@@ -171,10 +197,13 @@ main () {
   if [ $context != "--noself" ];then
     update_run "self" "$@"
   fi
-  update_run "os" "$@"
-  update_run "crane" "$@"
-  update_run "dockerfiles" "$@"
-  update_run "dockerimages" "$@"
+  if [ $context == "--noself" ];then
+    context="--updatebyhand"
+  fi
+  update_run "os" "$context"
+  update_run "crane" "$context"
+  update_run "dockerfiles" "$context"
+  update_run "dockerimages" "$context"
   echo
   echo "Starting provisioner"
   echo "------------------------------------"
