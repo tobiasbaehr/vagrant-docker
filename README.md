@@ -90,6 +90,8 @@ To avoid the update of the dockerfiles or a docker image, create a file blacklis
   myproject
   ```
 
+  - Add your own update script (update.sh) per git repository or per project, which will be called after the update mechanism run ``git pull`` or run ``crane provision`` for a enabled project. This is usefully to pull docker image or build new docker image. Example: ``dockerfiles/company/update.sh`` or ``dockerfiles/company/myproject/update.sh``
+
 ----------
 Hosts file
 ----------
