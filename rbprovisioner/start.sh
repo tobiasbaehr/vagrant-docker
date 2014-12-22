@@ -61,10 +61,9 @@ run_updates() {
 }
 
 main () {
-  local update=${1:-""}
-  local force=${2:-""}
-  if [ ! -z "${update}" ] && [ "${update}" == '--update' ];then
-    run_updates "$force"
+  local autoupdate=${1:-""}
+  if [ ! -z "${autoupdate}" ];then
+    run_updates ${autoupdate}
   else
     prestart
     start_provisioner

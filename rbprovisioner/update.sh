@@ -22,7 +22,7 @@ update_os() {
 
 run_update_scripts() {
   local lastUpDir=/root/rblastupdate/
-  if [[ ! -d $lastUpDir ]];then
+  if [ ! -d $lastUpDir ];then
     mkdir $lastUpDir
   fi
   local lastUpFile="$lastUpDir/update_scripts"
@@ -30,6 +30,8 @@ run_update_scripts() {
   if [ -f $lastUpFile ];then
     lastUpNr=$(cat $lastUpFile)
   fi
+  # TODO add while loop
+
   lastUpNr=$(($lastUpNr + 1))
 
   if [ -f "${RBLIB}/updates/update_$lastUpNr.sh" ];then
@@ -139,13 +141,13 @@ update_dockerimages() {
 }
 
 update_run () {
-  local type=$1
-  local force=${2:-""}
+  local component=$1
+  local updatetype=${2:-""}
   local lastUpDir=/root/rblastupdate/
   if [[ ! -d $lastUpDir ]];then
     mkdir $lastUpDir
   fi
-  local lastUpFile="$lastUpDir${type}"
+  local lastUpFile="$lastUpDir${component}"
   local lastUpTime=0
   local now=$(date +"%s")
 
@@ -157,10 +159,10 @@ update_run () {
   fi
   local duration="60 * 60 * 24 * 7"
   local next=$((${lastUpTime} + ${duration}));
-
-  if [ "${next}" -le "${now}" ] || [ ! -z $force ];then
+  # 7 days are gone or rbupdate cmd or first run
+  if [ "${next}" -le "${now}" ] || [ $updatetype == "--updatebyhand" ] || [ $lastUpTime == 0 ];then
     echo "${now}" > "${lastUpFile}"
-    update_"${type}"
+    update_"${component}"
   fi
 }
 
@@ -177,7 +179,7 @@ main () {
   echo "Starting provisioner"
   echo "------------------------------------"
   echo
-  exec "${RBLIB}/start.sh" --run
+  exec "${RBLIB}/start.sh"
 }
 
 main "$@"

@@ -35,7 +35,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     s.path = "rbprovisioner/start.sh"
     s.keep_color = true
     if config.user.vm.autoupdate
-      s.args = '--update'
+      s.args = '--autoupdate'
     end
   end
   config.vm.provider :virtualbox do |vb|
