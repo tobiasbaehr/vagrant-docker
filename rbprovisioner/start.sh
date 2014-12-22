@@ -16,18 +16,6 @@ export CRANEVERSION="1.0.0"
 export DATADIR="/data"
 export YADDPROJECTS="${DATADIR}/user/yaddprojects"
 export DOTDRUSH="${DATADIR}/user/.drush"
-export SSHDIR="${DATADIR}/user/.ssh/"
-export SSHKEY=${SSHKEY:-""}
-
-if [[ -f $SSHDIR/id_rsa ]];then
-  export SSHKEY=$SSHDIR/id_rsa
-elif [[ -f $SSHDIR/id_rsa-cert ]];then
-  export SSHKEY=$SSHDIR/id_rsa-cert
-elif [[ -f $SSHDIR/id_dsa ]];then
-  export SSHKEY=$SSHDIR/id_dsa
-elif [[ -f $SSHDIR/id_dsa-cert ]];then
-  export SSHKEY=$SSHDIR/id_dsa-cert
-fi
 
 start_provisioner() {
   script="$RBLIB/provision.sh"
@@ -42,21 +30,26 @@ prestart() {
 
   if [ ! -d "$DATADIR/www" ];then
     mkdir -p $DATADIR/www
+    chown vagrant: $DATADIR/www
   fi
   if [ ! -e /var/www ];then
     ln -s $DATADIR/www /var/www
-    chown vagrant:vagrant /var/www
+    chown vagrant: /var/www
   fi
   if [ ! -d $YADDPROJECTS ];then
     mkdir -p $YADDPROJECTS
-    chown vagrant:vagrant $YADDPROJECTS
+    chown vagrant: $YADDPROJECTS
   fi
 
   if [ ! -d $DOTDRUSH ];then
     mkdir -p $DOTDRUSH
-    chown vagrant:vagrant $DOTDRUSH
+    chown vagrant: $DOTDRUSH
   fi
-
+  if [ ! -f $DATADIR/user/.gitconfig ];then
+    mkdir -p "$DATADIR/user"
+    cp $RBLIB/git/.gitconfig $DATADIR/user/.gitconfig
+    chown vagrant: $DATADIR/user/.gitconfig
+  fi
 }
 
 run_updates() {
@@ -67,12 +60,10 @@ run_updates() {
   fi
 }
 
-
 main () {
-  local update=${1:-""}
-  local force=${2:-""}
-  if [ ! -z "${update}" ] && [ "${update}" == '--update' ];then
-    run_updates "$force"
+  local autoupdate=${1:-""}
+  if [ ! -z "${autoupdate}" ];then
+    run_updates ${autoupdate}
   else
     prestart
     start_provisioner

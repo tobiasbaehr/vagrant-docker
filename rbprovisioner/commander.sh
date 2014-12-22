@@ -2,4 +2,4 @@
 set -o errexit
 set -o nounset
 cd /vagrant/dockerfiles/reinblau/cmd
-sudo crane lift
+sudo crane lift -r

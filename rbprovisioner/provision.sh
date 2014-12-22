@@ -75,7 +75,11 @@ require_install() {
 proxy_start () {
   mkdir -p $DATADIR/nginx-proxy/conf.d
   cp ${__DIR__}/proxy/nginx_custom.conf $DATADIR/nginx-proxy/conf.d
-  docker run -d --name="nginx-proxy" -v "/var/run/docker.sock:/tmp/docker.sock" -v "${DATADIR}/nginx-proxy/conf.d/:/etc/nginx/conf.d/" -p "80:80" jwilder/nginx-proxy 2> /dev/null || docker restart nginx-proxy > /dev/null 2>&1 || true
+  OUT=$(docker rm -f nginx-proxy 2> /dev/null)
+  echo "Starting nginx proxy"
+  OUT=$(docker run -d --name="nginx-proxy" -v "/var/run/docker.sock:/tmp/docker.sock" -v "${DATADIR}/nginx-proxy/conf.d/:/etc/nginx/conf.d/" -p "80:80" -p "443:443" jwilder/nginx-proxy)
+  echo "------------------------------------"
+  echo
 }
 
 public_install() {

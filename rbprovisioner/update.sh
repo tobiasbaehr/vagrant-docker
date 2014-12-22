@@ -21,8 +21,8 @@ update_os() {
 }
 
 run_update_scripts() {
-  local lastUpDir=/root/rblastupdate/
-  if [[ ! -d $lastUpDir ]];then
+  local lastUpDir=/root/rblastupdate
+  if [ ! -d $lastUpDir ];then
     mkdir $lastUpDir
   fi
   local lastUpFile="$lastUpDir/update_scripts"
@@ -31,12 +31,12 @@ run_update_scripts() {
     lastUpNr=$(cat $lastUpFile)
   fi
   lastUpNr=$(($lastUpNr + 1))
-
-  if [ -f "${RBLIB}/updates/update_$lastUpNr.sh" ];then
+  while [ -f "${RBLIB}/updates/update_$lastUpNr.sh" ]; do
     echo "Running ${RBLIB}/updates/update_$lastUpNr.sh"
     bash "${RBLIB}/updates/update_$lastUpNr.sh"
     echo $lastUpNr > $lastUpFile
-  fi
+    lastUpNr=$(($lastUpNr + 1))
+  done
 
 }
 
@@ -63,7 +63,6 @@ update_self() {
     echo
     echo "Start update"
     echo "------------------------------------"
-    echo
     main --noself
   fi
 }
@@ -104,9 +103,7 @@ update_dockerfiles() {
         echo "------------------------------------"
         echo
         cd "${dir}"
-        echo 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSHKEY $*' > ssh && chmod +x ssh
-        GIT_SSH='./ssh' git pull
-        rm ssh
+        su vagrant -c "git pull"
         echo "------------------------------------"
         echo
       fi
@@ -115,6 +112,26 @@ update_dockerfiles() {
 
 update_dockerimages() {
   local projects=""
+  echo "Stopping all containers"
+  docker rm -f $(docker ps -aq) 2> /dev/null
+
+  echo "Update built-in images"
+  docker pull jwilder/nginx-proxy
+  docker pull reinblau/cmd
+  echo "------------------------------------"
+  echo
+  subdirs="$DOCKERFILES/*/"
+  for dir in ${subdirs}
+  do
+    updatefile="${dir}update.sh"
+    if [ -f "${updatefile}" ];then
+      echo "Executing ${updatefile}"
+      bash "${updatefile}"
+      echo "------------------------------------"
+      echo
+    fi
+  done
+
   if [[ -f $PROJECTLIST ]];then
     for project in $(cat "$PROJECTLIST")
       do
@@ -129,7 +146,16 @@ update_dockerimages() {
             echo "Updating docker image for ${project}"
             echo "------------------------------------"
             echo
-            cd $project_dir && crane provision && crane stop && crane rm
+            cd $project_dir && crane provision
+            echo "------------------------------------"
+            echo
+          fi
+          if [[ -f "$project_dir/update.sh" ]];then
+            echo
+            echo "Executing extra update for ${project}"
+            echo "------------------------------------"
+            echo
+            bash "$project_dir/update.sh"
             echo "------------------------------------"
             echo
           fi
@@ -139,13 +165,13 @@ update_dockerimages() {
 }
 
 update_run () {
-  local type=$1
-  local force=${2:-""}
+  local component=$1
+  local updatetype=${2:-""}
   local lastUpDir=/root/rblastupdate/
   if [[ ! -d $lastUpDir ]];then
     mkdir $lastUpDir
   fi
-  local lastUpFile="$lastUpDir${type}"
+  local lastUpFile="$lastUpDir${component}"
   local lastUpTime=0
   local now=$(date +"%s")
 
@@ -157,10 +183,10 @@ update_run () {
   fi
   local duration="60 * 60 * 24 * 7"
   local next=$((${lastUpTime} + ${duration}));
-
-  if [ "${next}" -le "${now}" ] || [ ! -z $force ];then
+  # 7 days are gone or rbupdate cmd or first run
+  if [ "${next}" -le "${now}" ] || [ $updatetype == "--updatebyhand" ] || [ $lastUpTime == 0 ];then
     echo "${now}" > "${lastUpFile}"
-    update_"${type}"
+    update_"${component}"
   fi
 }
 
@@ -169,15 +195,18 @@ main () {
   if [ $context != "--noself" ];then
     update_run "self" "$@"
   fi
-  update_run "os" "$@"
-  update_run "crane" "$@"
-  update_run "dockerfiles" "$@"
-  update_run "dockerimages" "$@"
+  if [ $context == "--noself" ];then
+    context="--updatebyhand"
+  fi
+  update_run "os" "$context"
+  update_run "crane" "$context"
+  update_run "dockerfiles" "$context"
+  update_run "dockerimages" "$context"
   echo
   echo "Starting provisioner"
   echo "------------------------------------"
   echo
-  exec "${RBLIB}/start.sh" --run
+  exec "${RBLIB}/start.sh"
 }
 
 main "$@"
