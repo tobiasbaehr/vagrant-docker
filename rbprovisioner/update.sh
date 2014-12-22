@@ -30,15 +30,13 @@ run_update_scripts() {
   if [ -f $lastUpFile ];then
     lastUpNr=$(cat $lastUpFile)
   fi
-  # TODO add while loop
-
   lastUpNr=$(($lastUpNr + 1))
-
-  if [ -f "${RBLIB}/updates/update_$lastUpNr.sh" ];then
+  while [ -f "${RBLIB}/updates/update_$lastUpNr.sh" ]; do
     echo "Running ${RBLIB}/updates/update_$lastUpNr.sh"
     bash "${RBLIB}/updates/update_$lastUpNr.sh"
     echo $lastUpNr > $lastUpFile
-  fi
+    lastUpNr=$(($lastUpNr + 1))
+  done
 
 }
 
