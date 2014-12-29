@@ -14,12 +14,12 @@ docker_install () {
   echo "------------------------------------"
   if [ ! -f /usr/bin/docker ];
       then
-      echo "Installing Docker from get.docker.io"
+      echo "Installing Docker from get.docker.com"
       echo "------------------------------------"
       echo
-      curl -s get.docker.io | sh 2>&1 | egrep -i -v "Ctrl|docker installed"
-      service docker restart
-      else
+      curl -sSL https://get.docker.com/ | sh
+  else
+      service docker status 2> /dev/null | service docker start
       echo
       echo "Docker found at /usr/bin/docker:"
       echo "------------------------------------"

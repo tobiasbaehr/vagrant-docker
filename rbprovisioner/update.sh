@@ -16,6 +16,7 @@ update_os() {
   apt-get upgrade -yq
   apt-get dist-upgrade -yq
   apt-get autoclean -yq
+  service docker status 2> /dev/null | service docker start
   echo "------------------------------------"
   echo
 }
