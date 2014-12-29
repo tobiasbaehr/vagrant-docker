@@ -19,6 +19,7 @@ docker_install () {
       echo
       curl -sSL https://get.docker.com/ | sh
   else
+      service docker status 2> /dev/null | service docker start
       echo
       echo "Docker found at /usr/bin/docker:"
       echo "------------------------------------"
