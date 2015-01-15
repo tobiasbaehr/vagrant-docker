@@ -43,13 +43,12 @@ prestart() {
 
   if [ ! -d $DOTDRUSH ];then
     mkdir -p $DOTDRUSH
-    chown vagrant: $DOTDRUSH
   fi
   if [ ! -f $DATADIR/user/.gitconfig ];then
     mkdir -p "$DATADIR/user"
     cp $RBLIB/git/.gitconfig $DATADIR/user/.gitconfig
-    chown vagrant: $DATADIR/user/.gitconfig
   fi
+  chown -R vagrant: $DATADIR/user/
 }
 
 run_updates() {
