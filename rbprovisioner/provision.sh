@@ -55,7 +55,7 @@ cleanup_images() {
 }
 
 cleanup_containers() {
-  local containers="$(docker ps -a | grep 'Exited' | awk '{print $1}')"
+  local containers="$(docker ps --filter "status=exited" -qa)"
   if [[ ! -z $containers ]];then
     echo
     echo "Clean up exited container"
