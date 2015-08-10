@@ -46,7 +46,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
   config.hostmanager.enabled = false
   config.hostmanager.manage_host = true
-
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.enable :apt
+    config.cache.enable :apt_lists
+    config.cache.scope = :machine
+  end
   dirname = File.dirname(__FILE__)
   vhostsfile = dirname + "/vhosts.txt"
   hostnames = Array.new
