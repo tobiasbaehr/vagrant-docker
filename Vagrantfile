@@ -29,7 +29,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
   config.ssh.forward_agent = true
   config.vm.box = "tobiasb/dockerhost"
-  config.vm.network :private_network, :ip => config.user.vm.ip
+  if Vagrant.has_plugin?("vagrant-auto_network")
+    AutoNetwork.default_pool = '192.168.56.0/24'
+    config.vm.network :private_network, :auto_network => true
+  else
+    config.vm.network :private_network, :ip => config.user.vm.ip
+  end
   config.vm.hostname = vm_name + ".dev"
   config.vm.provision :shell , run: "always" do |s|
     s.path = "rbprovisioner/start.sh"
