@@ -77,7 +77,7 @@ proxy_start () {
   cp ${__DIR__}/proxy/nginx_custom.conf $DATADIR/nginx-proxy/conf.d
   OUT=$(docker rm -f nginx-proxy 2> /dev/null)
   echo "Starting nginx proxy"
-  OUT=$(docker run -d --name="nginx-proxy" -v "/var/run/docker.sock:/tmp/docker.sock:ro" -v "/data/nginx-proxy/conf.d/nginx_custom.conf:/etc/nginx/conf.d/nginx_custom.conf:ro" -p "80:80" -p "443:443" jwilder/nginx-proxy)
+  OUT=$(docker run -d --name="nginx-proxy" -v "/var/run/docker.sock:/tmp/docker.sock:ro" -v "/data/nginx-proxy/conf.d/nginx_custom.conf:/etc/nginx/conf.d/nginx_custom.conf:ro" -p "80:80" -p "443:443" jwilder/nginx-proxy:0.3.6)
   echo "------------------------------------"
   echo
 }
