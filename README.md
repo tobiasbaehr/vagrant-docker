@@ -26,7 +26,7 @@ INSTALLATION
 - Open your command line and run the following commands to install all required plugins (Terminal on Mac OS X/ CMD.exe on Windows)
 - ``vagrant plugin install vagrant-hostmanager vagrant-vbguest nugrant``
 
-- [Download](/archive/master.zip) this project into your local machine and rename the unzipped file to *vagrant-docker*
+- [Download](https://github.com/reinblau/vagrant-docker/archive/master.zip) this project into your local machine and rename the unzipped file to *vagrant-docker*
 
 - Copy [projects.txt.dist](projects.txt.dist) to projects.txt
 
