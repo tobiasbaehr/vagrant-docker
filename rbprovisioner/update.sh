@@ -113,11 +113,11 @@ update_dockerfiles() {
 
 update_dockerimages() {
   local projects=""
-  echo "Stopping all containers"
-  docker rm -f $(docker ps -aq) 2> /dev/null
+  echo "Kill all containers"
+  docker rm -f $(docker ps -aq) 2>/dev/null
 
   echo "Update built-in images"
-  docker pull jwilder/nginx-proxy
+  docker pull jwilder/nginx-proxy:0.3.0
   docker pull reinblau/cmd
   echo "------------------------------------"
   echo
@@ -136,7 +136,7 @@ update_dockerimages() {
   if [[ -f $PROJECTLIST ]];then
     for project in $(cat "$PROJECTLIST")
       do
-      if [[ -f $BLACKLIST ]] && grep ${project} $BLACKLIST > /dev/null ;then
+      if [[ -f $BLACKLIST ]] && grep ${project} $BLACKLIST >/dev/null ;then
         continue
       fi
       projects="$DOCKERFILES/*/$project/"
